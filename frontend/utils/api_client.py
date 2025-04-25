@@ -7,12 +7,11 @@ from typing import Dict, Any, Optional, List
 
 from frontend import config
 
-def _prepare_payload(url: str, data_str: str) -> Optional[Dict[str, Any]]:
+def _prepare_payload(data_str: str) -> Optional[Dict[str, Any]]:
     """
     Prepare the API payload from user inputs.
     
     Args:
-        url: Source URL
         data_str: JSON string of data containing PDF links
         
     Returns:
@@ -43,7 +42,6 @@ def _prepare_payload(url: str, data_str: str) -> Optional[Dict[str, Any]]:
         payload = {
             "id": 1,  # Default ID
             "data": data_list,
-            "url": url,
             "created_at": datetime.now().isoformat()
         }
         return payload
@@ -87,36 +85,34 @@ def _make_api_request(endpoint: str, payload: Dict[str, Any]) -> Optional[Dict[s
         st.error(f"Unexpected error: {e}")
         return None
 
-def check_links_api(url: str, data_str: str) -> Optional[Dict[str, Any]]:
+def check_links_api(data_str: str) -> Optional[Dict[str, Any]]:
     """
     Check PDF links API call.
     
     Args:
-        url: Source URL
         data_str: JSON string of data containing PDF links
         
     Returns:
         API response or None on error
     """
     with st.spinner("Checking PDF links..."):
-        payload = _prepare_payload(url, data_str)
+        payload = _prepare_payload(data_str)
         if payload:
             return _make_api_request(config.CHECK_LINKS_ENDPOINT, payload)
     return None
 
-def download_pdfs_api(url: str, data_str: str) -> Optional[Dict[str, Any]]:
+def download_pdfs_api(data_str: str) -> Optional[Dict[str, Any]]:
     """
     Download PDFs API call.
     
     Args:
-        url: Source URL
         data_str: JSON string of data containing PDF links
         
     Returns:
         API response or None on error
     """
     with st.spinner("Downloading PDFs..."):
-        payload = _prepare_payload(url, data_str)
+        payload = _prepare_payload(data_str)
         if payload:
             return _make_api_request(config.DOWNLOAD_PDFS_ENDPOINT, payload)
     return None 

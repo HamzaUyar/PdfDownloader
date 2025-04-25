@@ -1,0 +1,37 @@
+[theme]
+# Primary accent color for interactive elements
+primaryColor = "#4361ee"
+
+# Background color for the main content area
+backgroundColor = "#0e1117"
+
+# Background color used for the sidebar and most interactive widgets
+secondaryBackgroundColor = "#1e1e1e"
+
+# Color used for almost all text
+textColor = "#e2e8f0"
+
+# Font family for all text in the app, except code blocks
+font = "sans-serif"
+
+# Base theme to be used regardless of user preference
+base = "dark"
+
+[browser]
+# Whether to enable the theme selector in the sidebar
+gatherUsageStats = false
+
+[server]
+# If false, will attempt to open a browser window on start
+headless = false
+
+# Enables support for Cross-Origin Resource Sharing (CORS)
+enableCORS = false
+
+[runner]
+# Controls whether a warning is displayed if the app has been modified since the last run
+fastReruns = true
+
+[logger]
+# Level of logging: 'error', 'warning', 'info', or 'debug'.
+level = "info" 
