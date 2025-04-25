@@ -2,8 +2,10 @@ version: '3.8'
 
 services:
   backend:
-    build: .  # Build from the current directory (where Dockerfile is)
-    container_name: pdfdownloader_service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdfdownloader_backend
     ports:
       - "8000:8000" # Map host port 8000 to container port 8000
     volumes:
@@ -11,4 +13,21 @@ services:
       - ./downloads:/app/downloads
     environment:
       - PYTHONUNBUFFERED=1 # Ensures Python logs appear directly
-      # Add any other necessary environment variables here 
+    command: ["poetry", "run", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+  
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pdfdownloader_frontend
+    depends_on:
+      - backend
+    ports:
+      - "8501:8501" # Streamlit's default port
+    volumes:
+      - ./downloads:/app/downloads
+    environment:
+      - PYTHONUNBUFFERED=1
+      - BACKEND_URL=http://backend:8000
+      - PYTHONPATH=/app
+    command: ["poetry", "run", "streamlit", "run", "frontend/app.py", "--server.port=8501", "--server.address=0.0.0.0"] 

@@ -27,18 +27,20 @@ RUN pip install "poetry==$POETRY_VERSION"
 COPY pyproject.toml poetry.lock* ./
 
 # Install dependencies using Poetry
-# --no-dev: Exclude development dependencies
+# --only main: Only install main dependencies (no dev dependencies)
 # --no-root: Don't install the project itself as editable, done in the next step
-RUN poetry install --no-dev --no-root
+RUN poetry install --only main --no-root
 
 # Create the directory for downloads within the container
-RUN mkdir /app/downloads
+RUN mkdir -p /app/downloads
 
 # Copy the application code into the container
 COPY ./backend /app/backend
+COPY ./frontend /app/frontend
 
-# Expose the port the app runs on
+# Expose the ports the apps run on
 EXPOSE 8000
+EXPOSE 8501
 
-# Define the command to run the application using Uvicorn
+# Define the command to run the application using Uvicorn (will be overridden by docker-compose)
 CMD ["poetry", "run", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"] 
