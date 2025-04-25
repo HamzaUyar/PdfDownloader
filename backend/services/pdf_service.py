@@ -12,13 +12,23 @@ class PdfService:
         """Extracts unique, valid-looking PDF links from the payload."""
         pdf_links = set()
         for item in payload.data:
-            if isinstance(item, dict) and 'pdf_link' in item:
-                link = item.get('pdf_link')
-                # Basic validation (adjust as needed)
-                if link and isinstance(link, str) and link.lower().startswith(('http://', 'https://')):
-                    # Consider removing .pdf check if non-suffixed links are expected
-                    # if link.lower().endswith('.pdf'):
-                    pdf_links.add(link)
+            # If the item is a Guideline object, access the pdf_links attribute directly
+            if hasattr(item, 'pdf_links') and isinstance(item.pdf_links, list):
+                for link in item.pdf_links:
+                    if link and isinstance(link, str) and link.lower().startswith(('http://', 'https://')):
+                        pdf_links.add(link)
+            # For backward compatibility with dictionary inputs
+            elif isinstance(item, dict):
+                # Check for pdf_links array
+                if 'pdf_links' in item and isinstance(item['pdf_links'], list):
+                    for link in item['pdf_links']:
+                        if link and isinstance(link, str) and link.lower().startswith(('http://', 'https://')):
+                            pdf_links.add(link)
+                # Also check for pdf_link for backward compatibility
+                elif 'pdf_link' in item:
+                    link = item.get('pdf_link')
+                    if link and isinstance(link, str) and link.lower().startswith(('http://', 'https://')):
+                        pdf_links.add(link)
         return pdf_links
 
     async def check_pdf_links(self, payload: InputPayload) -> List[LinkStatus]:
