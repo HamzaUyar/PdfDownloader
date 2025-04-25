@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .  # Build from the current directory (where Dockerfile is)
+    container_name: pdfdownloader_service
+    ports:
+      - "8000:8000" # Map host port 8000 to container port 8000
+    volumes:
+      # Map the local ./downloads directory to /app/downloads inside the container
+      - ./downloads:/app/downloads
+    environment:
+      - PYTHONUNBUFFERED=1 # Ensures Python logs appear directly
+      # Add any other necessary environment variables here 
