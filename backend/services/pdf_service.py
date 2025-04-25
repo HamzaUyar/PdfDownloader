@@ -44,7 +44,12 @@ class PdfService:
     async def _check_single_link(self, url: str) -> LinkStatus:
         """Helper to check one link's status."""
         try:
-            response = await http_client.perform_head_request(url)
+            from backend.utils.file_utils import extract_pdf_url
+            
+            # Extract the actual PDF URL if this is a viewer URL
+            pdf_url = extract_pdf_url(url)
+            
+            response = await http_client.perform_head_request(pdf_url)
             if response.status_code == 200:
                 return LinkStatus(url=url, status="OK", status_code=response.status_code)
             else:
@@ -69,15 +74,20 @@ class PdfService:
     async def _download_single_pdf(self, url: str) -> DownloadStatus:
         """Helper to download one PDF file."""
         try:
+            from backend.utils.file_utils import extract_pdf_url
+            
+            # Extract the actual PDF URL if this is a viewer URL
+            pdf_url = extract_pdf_url(url)
+            
             # Optional pre-check with HEAD request
-            head_response = await http_client.perform_head_request(url)
+            head_response = await http_client.perform_head_request(pdf_url)
             head_response.raise_for_status() # Check if accessible before GET
 
             file_name = file_utils.generate_filename_from_url(url)
             save_path = DOWNLOAD_DIR / file_name
 
             # Perform streaming download
-            async with http_client.stream_download_request(url) as response:
+            async with http_client.stream_download_request(pdf_url) as response:
                  await file_utils.save_stream_to_file(response, save_path)
                  return DownloadStatus(url=url, status="DOWNLOADED", file_path=str(save_path))
 

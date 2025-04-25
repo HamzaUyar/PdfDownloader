@@ -6,6 +6,8 @@ A simple backend service built with FastAPI and organized in a layered architect
 
 * **/api/v1/check-links**: Checks PDF link accessibility.
 * **/api/v1/download-pdfs**: Downloads accessible PDFs.
+* **Intelligent PDF Extraction**: Automatically extracts actual PDF URLs from viewer pages.
+* **Flexible Input Formats**: Accepts various JSON formats including single guideline, list of guidelines, or structured payload.
 
 ## Technologies Used
 
@@ -57,18 +59,51 @@ Endpoints are prefixed with `/api/v1`.
 
 * **Method:** `POST`
 * **URL:** `http://localhost:8000/api/v1/check-links`
-* **Body (raw JSON):**
-  ```json
+* **Supported Input Formats:**
+
+#### Format 1: Single Guideline Object
+```json
+{
+  "id": 74,
+  "url": "https://example.org/guideline.html",
+  "domain": "example.org",
+  "title_english": "Example Guideline 2022",
+  "pdf_links": [
+    "https://example.org/pdf/doc1.pdf",
+    "https://example.org/pdf/doc2.pdf"
+  ]
+}
+```
+
+#### Format 2: List of Guidelines
+```json
+[
   {
-    "id": 123,
-    "data": [
-      {"pdf_link": "https://example.com/document1.pdf"},
-      {"pdf_link": "https://example.com/document2.pdf"}
-    ],
-    "url": "https://example.com/source",
-    "created_at": "2023-05-01T12:30:00Z"
+    "id": 72,
+    "url": "https://example.org/guideline1.html",
+    "pdf_links": ["https://example.org/pdf/doc1.pdf"]
+  },
+  {
+    "id": 73,
+    "url": "https://example.org/guideline2.html",
+    "pdf_links": ["https://example.org/pdf/doc2.pdf"]
   }
-  ```
+]
+```
+
+#### Format 3: Legacy Format with Structured Payload
+```json
+{
+  "id": 123,
+  "data": [
+    {"pdf_link": "https://example.com/document1.pdf"},
+    {"pdf_link": "https://example.com/document2.pdf"}
+  ],
+  "url": "https://example.com/source",
+  "created_at": "2023-05-01T12:30:00Z"
+}
+```
+
 * **Response:**
   ```json
   {
@@ -93,7 +128,7 @@ Endpoints are prefixed with `/api/v1`.
 
 * **Method:** `POST`
 * **URL:** `http://localhost:8000/api/v1/download-pdfs`
-* **Body (raw JSON):** Same as check-links endpoint
+* **Body (raw JSON):** Same formats as check-links endpoint
 * **Response:**
   ```json
   {
@@ -113,6 +148,22 @@ Endpoints are prefixed with `/api/v1`.
     ]
   }
   ```
+
+## Special Feature: PDF Viewer URL Handling
+
+The service can extract actual PDF URLs from PDF viewer pages. For example:
+
+```
+https://example.org/viewer.html?file=/path/to/document.pdf
+```
+
+Will be automatically converted to:
+
+```
+https://example.org/path/to/document.pdf
+```
+
+This ensures proper downloading of PDFs even when they're embedded in viewer interfaces.
 
 ## Stopping the Service
 
