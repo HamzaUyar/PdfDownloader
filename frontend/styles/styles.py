@@ -35,15 +35,29 @@ def get_css():
         background-color: var(--background-color);
     }
     
-    .main-container {
+    /* Containers */
+    .main-container, .result-container {
         background-color: var(--card-background);
         border-radius: 10px;
-        padding: 2rem;
-        box-shadow: 0 4px 6px var(--shadow-color);
-        margin-bottom: 1rem;
+        padding: 1rem;
+        box-shadow: 0 2px 4px var(--shadow-color);
+        margin-bottom: 0.75rem;
         border: 1px solid var(--card-border);
     }
     
+    /* Hide empty containers */
+    .stElementContainer:has(.main-container:empty),
+    .stMarkdownContainer:has(.main-container:empty),
+    .stMarkdown:has(.main-container:empty),
+    .st-emotion-cache-seewz2:has(.main-container:empty),
+    div:has(> .main-container:empty) {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Buttons */
     .stButton>button {
         background-color: var(--accent-primary);
         color: white;
@@ -71,6 +85,7 @@ def get_css():
         box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
     }
     
+    /* Inputs */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
         border-radius: 5px;
         border: 1px solid var(--input-border);
@@ -85,31 +100,37 @@ def get_css():
         box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
     }
     
+    /* Data display */
     .stDataFrame {
         border: none;
         border-radius: 10px;
         box-shadow: 0 2px 4px var(--shadow-color);
     }
     
+    /* Typography */
     h1 {
         color: var(--text-primary);
         font-weight: 700;
         font-size: 2.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
     
     h2, h3 {
         color: var(--text-secondary);
         font-weight: 600;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
     }
     
+    /* Stats cards */
     .stat-card {
         background-color: var(--card-background);
-        padding: 1rem;
+        padding: 0.75rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px var(--shadow-color);
         text-align: center;
         border: 1px solid var(--card-border);
+        margin-bottom: 0.5rem;
     }
     
     .success-stat {
@@ -120,20 +141,33 @@ def get_css():
         border-left: 4px solid var(--error-color);
     }
     
+    /* Layout fixes */
     .sidebar .stMarkdown {
         line-height: 1.6;
         color: var(--text-primary);
     }
     
-    .result-container {
-        margin-top: 1.5rem;
-        padding: 1.5rem;
-        background-color: var(--card-background);
-        border-radius: 10px;
-        box-shadow: 0 4px 6px var(--shadow-color);
-        border: 1px solid var(--card-border);
+    /* Remove extra padding */
+    .block-container {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0 !important;
     }
-
+    
+    /* Remove extra spaces */
+    [data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+    
+    /* Reduce spacing in markdown */
+    .stMarkdown {
+        padding-bottom: 0 !important;
+    }
+    
+    /* Additional fix for element-container with class kj6hex */
+    .st-emotion-cache-kj6hex:has(.main-container:empty) {
+        display: none !important;
+    }
+    
     /* Auto-detect theme and apply appropriate styles */
     @media (prefers-color-scheme: dark) {
         :root:not([data-theme="light"]) {

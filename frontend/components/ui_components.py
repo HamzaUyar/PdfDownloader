@@ -46,6 +46,47 @@ def setup_page_config():
         background-color: var(--background-color) !important;
         color: var(--text-primary) !important;
     }
+    
+    /* Remove extra padding and margins */
+    .block-container {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0 !important;
+    }
+    
+    /* Remove empty blocks and spaces */
+    [data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+    
+    /* Fix for empty bars */
+    .main-container, .result-container {
+        padding: 1rem !important;
+        margin-bottom: 0.75rem !important;
+        background-color: var(--card-background);
+    }
+    
+    /* Adjust spacing between sections */
+    h1 {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    /* Reduce padding in markdown */
+    .stMarkdown {
+        padding-bottom: 0 !important;
+    }
+    
+    /* Remove extra space from text area */
+    .stTextArea {
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Fix empty container issue */
+    .st-emotion-cache-kj6hex:has(.main-container:empty),
+    .st-emotion-cache-seewz2:has(.main-container:empty),
+    .stMarkdownContainer:has(.main-container:empty),
+    .stMarkdown:has(.main-container:empty) {
+        display: none;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -73,14 +114,14 @@ def setup_sidebar():
 
 def render_header():
     """Render the application header."""
-    st.markdown("<h1 style='text-align: center;'>📄 PDF Link Checker & Downloader</h1>", 
+    st.markdown("<h1 style='text-align: center; margin-top: 0.5rem;'>📄 PDF Link Checker & Downloader</h1>", 
                 unsafe_allow_html=True)
 
 def render_input_section():
     """Render the input section of the application."""
-    st.markdown('<div class="main-container">', unsafe_allow_html=True)
-    st.markdown("### Enter your PDF links data")
-    st.markdown("Provide JSON data containing PDF links to check accessibility or download.")
+    st.markdown('<div class="main-container" style="min-height: 1px;">', unsafe_allow_html=True)
+    st.markdown("<h3 style='margin-top: 0;'>Enter your PDF links data</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='margin-bottom: 0.5rem;'>Provide JSON data containing PDF links to check accessibility or download.</p>", unsafe_allow_html=True)
 
     # Input fields
     input_data = st.text_area(
